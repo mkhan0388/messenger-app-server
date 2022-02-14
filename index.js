@@ -6,12 +6,16 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 app.get("/", (req, res) => {
-	res.sendFile(__dirname + "/index.html");
+	res.send("Welcome to the chat room");
 });
 
+const messages = [{ username: "", message: "" }];
+
 io.on("connection", (socket) => {
+	console.log("You are connected");
 	socket.on("chat message", (msg) => {
-		io.emit("chat message", msg);
+		messages.push(msg);
+		io.emit("chat message", messages);
 	});
 	socket.on("disconnect", () => {
 		console.log("user disconnected");
